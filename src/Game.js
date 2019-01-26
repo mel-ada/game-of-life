@@ -20,14 +20,16 @@ class Game extends React.Component {
     }
 
     makeEmptyBoard() {
-        let board = [];
-        for (let y = 0; y < this.rows; y++) {
-            board[y] = [];
-            for (let x = 0; x < this.cols; x++) {
-                board[y][x] = Math.random() >= 0.5;
-            }
-        }
-        return board;
+        // Create a new array of length this.rows
+        // For each index in this array, map an array of length this.cols where each value is set to a random bool
+        return Array.from(Array(this.rows), _ => Array.from(Array(this.cols), _ => this.getRandomBool()));
+    }
+
+    getRandomBool() {
+        // Generate "random" number 1-3
+        // If the floor of (random number / 2) === 1, return true
+        // Else return false
+        return Math.floor(Math.floor(Math.random()*3)/2) === 1;
     }
 
     makeCells() {
