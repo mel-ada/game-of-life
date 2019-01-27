@@ -125,7 +125,7 @@ class Game extends React.Component {
             let x1 = dirs[i][0],
                 y1 = dirs[i][1];
 
-            if (this.state.cells.find(cell => cell.y === currentCell.y + y1 && cell.x === currentCell.x + x1) !== undefined) {
+            if (this.state.cells.find(cell => cell.y === currentCell.y + y1 && cell.x === currentCell.x + x1)) {
                 neighbors++;
             }
         }
