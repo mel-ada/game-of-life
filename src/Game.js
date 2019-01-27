@@ -10,7 +10,7 @@ class Game extends React.Component {
         super();
         this.rows = HEIGHT / CELL_SIZE;
         this.cols = WIDTH / CELL_SIZE;
-        this.board = this.makeEmptyBoard();
+        this.board = this.makeBoard();
     }
 
     state = {
@@ -19,7 +19,7 @@ class Game extends React.Component {
         isRunning: false,
     }
 
-    makeEmptyBoard() {
+    makeBoard() {
         // Create a new array of length this.rows
         // For each index in this array, map an array of length this.cols where each value is set to a random bool
         return Array.from(Array(this.rows), _ => Array.from(Array(this.cols), _ => this.getRandomBool()));
@@ -41,7 +41,6 @@ class Game extends React.Component {
                 }
             }
         }
-        console.log("cells", cells);
 
         return cells;
     }
@@ -88,7 +87,7 @@ class Game extends React.Component {
     }
 
     runIteration() {
-        let newBoard = this.makeEmptyBoard();
+        let newBoard = this.makeBoard();
 
         for (let y = 0; y < this.rows; y++) {
             for ( let x = 0; x < this.cols; x++) {
@@ -110,7 +109,6 @@ class Game extends React.Component {
         }
 
         this.board = newBoard;
-        console.log("board", this.board);
         this.setState({ cells: this.makeCells() });
 
         this.timeoutHandler = window.setTimeout(() => {
@@ -118,16 +116,16 @@ class Game extends React.Component {
         }, this.state.interval);
     }
 
-    calculateNeighbors(x, y) {
+    calculateNeighbors(currentCell) {
         let neighbors = 0;
 
         const dirs = [[-1, -1], [-1, 0], [-1, 1], [0, 1], [1, 1], [1, 0], [1, -1], [0, -1]];
 
-        for(let i = 0; i < dirs.length; i++) {
+        for (let i = 0; i < dirs.length; i++) {
             let x1 = dirs[i][0],
                 y1 = dirs[i][1];
 
-            if(this.state.cells.find(cell => cell.y === y + y1 && cell.x === x + x1) !== undefined) {
+            if (this.state.cells.find(cell => cell.y === currentCell.y + y1 && cell.x === currentCell.x + x1) !== undefined) {
                 neighbors++;
             }
         }
