@@ -1,7 +1,7 @@
 import React from 'react';
 import './Game.css';
 
-const CELL_SIZE = 20,
+const CELL_SIZE = 40,
     WIDTH = 800, 
     HEIGHT = 600;
 
@@ -41,6 +41,8 @@ class Game extends React.Component {
                 }
             }
         }
+        console.log("cells", cells);
+
         return cells;
     }
 
@@ -86,13 +88,12 @@ class Game extends React.Component {
     }
 
     runIteration() {
-        console.log('running iteration');
         let newBoard = this.makeEmptyBoard();
 
         for (let y = 0; y < this.rows; y++) {
             for ( let x = 0; x < this.cols; x++) {
-                let neighbors = this.calculateNeighbors(this.board, x, y);
-                if (this.board[y][x]) {
+                let neighbors = this.calculateNeighbors(x, y);
+                if (this.board[y][x] === true) {
                     if (neighbors === 2 || neighbors === 3) {
                         newBoard[y][x] = true;
                     } else {
@@ -100,11 +101,16 @@ class Game extends React.Component {
                             newBoard[y][x] = true;
                         }
                     }
+                } else {
+                    if (neighbors === 3) {
+                        newBoard[y][x] = true;
+                    }
                 }
             }
         }
 
         this.board = newBoard;
+        console.log("board", this.board);
         this.setState({ cells: this.makeCells() });
 
         this.timeoutHandler = window.setTimeout(() => {
@@ -112,15 +118,16 @@ class Game extends React.Component {
         }, this.state.interval);
     }
 
-    calculateNeighbors(board, x, y) {
+    calculateNeighbors(x, y) {
         let neighbors = 0;
-        const dirs = [[-1, -1], [-1, 0], [-1, 1], [0, 1], [1, 1], [1, 0], [1, -1], [0, -1]];
-        for (let i = 0; i < dirs.length; i++) {
-            const dir = dirs[i];
-            let y1 = y + dir[0],
-                x1 = x + dir[1];
 
-            if(x1 >= 0 && x1 < this.cols && y1 >= 0 && y1 < this.rows && board[y1][x1]) {
+        const dirs = [[-1, -1], [-1, 0], [-1, 1], [0, 1], [1, 1], [1, 0], [1, -1], [0, -1]];
+
+        for(let i = 0; i < dirs.length; i++) {
+            let x1 = dirs[i][0],
+                y1 = dirs[i][1];
+
+            if(this.state.cells.find(cell => cell.y === y + y1 && cell.x === x + x1) !== undefined) {
                 neighbors++;
             }
         }
